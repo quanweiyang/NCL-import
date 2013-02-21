@@ -21,7 +21,7 @@ DEF_SCRIPTS_DIRS  = (/"$NCL_DEF_SCRIPTS_DIR/../scripts/", \
                       "$NCARG_ROOT/lib/ncarg/nclscripts/wrf/"/)
 IMPORTED_SCRIPTS = (/"ncl_import"/)
 
-; push an script to IMPORTED_SCRIPTS 
+; push an script to IMPORTED_SCRIPTS
 undef("push_script")
 procedure push_script(script[1]:string)
 local array
@@ -67,20 +67,20 @@ begin
     print("Avalable scripts:")
     do i = 0, dimsizes(DEF_SCRIPTS_DIRS) - 1
       print(str_join(systemfunc("cd " + DEF_SCRIPTS_DIRS(i) + \
-      "; ls *.ncl|sed 's/\.ncl$//'"), ", "))
+            "; ls *.ncl|sed 's/\.ncl$//'"), ", "))
     end do
-  else if(.not.any(IMPORTED_SCRIPTS .eq. script)) then
-    f = search_file(DEF_SCRIPTS_DIRS, script + ".ncl")
-    if(f) then
-      ;print("loading script "+f@path)
-      loadscript(f@path)
-      push_script(script)
-    else
-      print("Warning: failed to import " + str_get_dq + script + str_get_dq)
-      print("Run import(" + str_get_dq + "?" +str_get_dq + \
-      ") to show available scripts")
+    else if(.not.any(IMPORTED_SCRIPTS .eq. script)) then
+      f = search_file(DEF_SCRIPTS_DIRS, script + ".ncl")
+      if(f) then
+        ;print("loading script "+f@path)
+        loadscript(f@path)
+        push_script(script)
+      else
+        print("Warning: failed to import " + str_get_dq + script + str_get_dq)
+        print("Run import(" + str_get_dq + "?" +str_get_dq + \
+              ") to show available scripts")
+      end if
     end if
-  end if
   end if
 end
 

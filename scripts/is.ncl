@@ -17,7 +17,7 @@ begin
       print("is_ascending: input is not monotonic!")
     end if
     return(False)
-  end if 
+  end if
 end
 
 ; test if the lat dimension variable is global on a fixed grid
@@ -50,5 +50,3 @@ begin
   test = is_lat_global(lat) .and. is_lon_global(lon)
   return(test)
 end
-
-

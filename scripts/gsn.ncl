@@ -48,18 +48,18 @@ begin
   n = dimsizes(cmap)
   if(n .gt. 2) then
     print("gsn_pdf: color map ignored, its size should be 1 or 2")
-  else if(n .eq. 2) then
-    gsn_merge_colormaps(wks, cmap(0), cmap(1))
-  else if(cmap .eq. "") then
-      gsn_define_colormap(wks, "default")
-  else if(cmap .eq. "g") then
-      gsn_define_colormap(wks, "gsdtol")
-  else if(cmap .eq. "br") then
-      gsn_define_colormap(wks, "BlueDarkRed18")
-  else if(cmap .eq. "brg") then
-      gsn_merge_colormaps(wks, "BlueDarkRed18", "gsdtol")
-  else
-      gsn_define_colormap(wks, cmap)
+    else if(n .eq. 2) then
+      gsn_merge_colormaps(wks, cmap(0), cmap(1))
+      else if(cmap .eq. "") then
+        gsn_define_colormap(wks, "default")
+        else if(cmap .eq. "g") then
+          gsn_define_colormap(wks, "gsdtol")
+          else if(cmap .eq. "br") then
+            gsn_define_colormap(wks, "BlueDarkRed18")
+            else if(cmap .eq. "brg") then
+              gsn_merge_colormaps(wks, "BlueDarkRed18", "gsdtol")
+            else
+              gsn_define_colormap(wks, cmap)
   end if end if end if end if end if end if
   return(wks)
 end
@@ -124,7 +124,7 @@ end
 
 undef("gsn_add_SCS_ndc")
 function gsn_add_SCS_ndc(wks:graphic, plot:graphic, dx[1]:numeric, \
-                            dy[1]:numeric, res:logical)
+                         dy[1]:numeric, res:logical)
 local f, fn, x, y, R, N, g
 begin
   fn  = "$NCL_DEF_SCRIPTS_DIR/../data/SouthChinaSea.nc"

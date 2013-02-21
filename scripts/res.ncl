@@ -143,7 +143,7 @@ res_map_china_lc@mpGridLineColor       = "gray40"
 ; res_map_china_lc@mpGridMaskMode      = "MaskOcean"
 
 res_map_china_lc@mpFillOn              = False
-res_map_china_lc@mpOutlineOn           = False 
+res_map_china_lc@mpOutlineOn           = False
 
 
 undef("_cn_level_span")

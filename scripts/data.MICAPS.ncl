@@ -229,10 +229,10 @@ begin
   micaps_title_numbers = string2numbers(micaps_title)
 
   ; skip the first several numbers in declare and title
-  n_skip = 1 + num(.not. ismissing(micaps_title_numbers)) 
+  n_skip = 1 + num(.not. ismissing(micaps_title_numbers))
   numbers = asciiread(fn, -1, "float")
   body = numbers(n_skip:)
-  
+
   if(micaps_format .eq. 2) then
     meta = floattoint(body(:5))
     data = body(6:)
@@ -257,7 +257,7 @@ begin
     data2d@micaps_declare = micaps_declare
     return(data2d)
   end if
-  
+
   if(micaps_format .eq. 4) then
     meta = body(:18)
     data = body(19:)
@@ -298,7 +298,7 @@ begin
 
   ; Read diamond 11 data, wind u v components
   ; 0年  1月  2日  3时次  4时效  5层次（均为整数）
-  ; 6经度格距  7纬度格距  8起始经度  9终止经度  10起始纬度  
+  ; 6经度格距  7纬度格距  8起始经度  9终止经度  10起始纬度
   ; 11终止纬度（均为浮点数）12纬向格点数  13经向格点数（均为整数）
   if(micaps_format .eq. 11) then
     meta = body(:13)
@@ -337,7 +337,7 @@ end
 ;------------------------------------------------------------------
 ; 2012-2-3
 ;------------------------------------------------------------------
-  ; make a header
+; make a header
 undef("make_micaps_header")
 function make_micaps_header(x:numeric)
 local vt, T, info, header
@@ -364,19 +364,19 @@ local opt, fmt, nlon, nlat, header
 begin
   nlon = dimsizes(x&lon)
   nlat = dimsizes(x&lat)
-  
+
   header = make_micaps_header(x)
-  
+
   opt = True
   opt@fout  = fn
   opt@title = header + str_get_nl() + \
-    pad(x@year) + " " + pad(x@month) + " "+ pad(x@day) + " " + \
-    pad(x@hour)+ " " + x@forecastHours + " " + x@level + " " + \
-    (x&lon(1)-x&lon(0)) + " " + (x&lat(1)-x&lat(0))+ " " + \
-    x&lon(0) + " " + x&lon(nlon-1) + " " + \
-    x&lat(0) + " " + x&lat(nlat-1) + " " + \
-    nlon + " " + nlat + " " + x@cnSpacing + " " + \
-    x@cnStart + " " + x@cnEnd + " " + x@smooth + " " + x@cnBold
+              pad(x@year) + " " + pad(x@month) + " "+ pad(x@day) + " " + \
+              pad(x@hour)+ " " + x@forecastHours + " " + x@level + " " + \
+              (x&lon(1)-x&lon(0)) + " " + (x&lat(1)-x&lat(0))+ " " + \
+              x&lon(0) + " " + x&lon(nlon-1) + " " + \
+              x&lat(0) + " " + x&lat(nlat-1) + " " + \
+              nlon + " " + nlat + " " + x@cnSpacing + " " + \
+              x@cnStart + " " + x@cnEnd + " " + x@smooth + " " + x@cnBold
   fmt = nlon + "f10.3"
   print("Write: "+opt@fout)
   write_matrix(x, fmt, opt)
@@ -389,7 +389,7 @@ begin
   wind_angle = uv2angle(ndtooned(u), ndtooned(v))
   wind_speed = uv2speed(ndtooned(u), ndtooned(v))
 
-  n = dimsizes(wind_angle) 
+  n = dimsizes(wind_angle)
   x = new((/n, 10/), "float")
   x(:, 0) = ispan(1, n, 1)
   x(:, 1) = ndtooned(conform(u, u&lon, 1))
@@ -420,12 +420,12 @@ begin
   fmt = nlon + "f8.1"
   opt = True
   opt@title = header + str_get_nl() + \
-    pad(u@year) + " " + pad(u@month) + " "+ pad(u@day) + " " + \
-    pad(u@hour)+ " " + u@forecastHours + " " + u@level + " " + \
-    (u&lon(1)-u&lon(0)) + " " + (u&lat(1)-u&lat(0))+ " " + \
-    u&lon(0) + " " + u&lon(nlon-1) + " " + \
-    u&lat(0) + " " + u&lat(nlat-1) + " " + \
-    nlon + " " + nlat
+              pad(u@year) + " " + pad(u@month) + " "+ pad(u@day) + " " + \
+              pad(u@hour)+ " " + u@forecastHours + " " + u@level + " " + \
+              (u&lon(1)-u&lon(0)) + " " + (u&lat(1)-u&lat(0))+ " " + \
+              u&lon(0) + " " + u&lon(nlon-1) + " " + \
+              u&lat(0) + " " + u&lat(nlat-1) + " " + \
+              nlon + " " + nlat
   opt@fout  =  fn
   print("Write: "+fn)
   write_matrix(uv, fmt, opt)
