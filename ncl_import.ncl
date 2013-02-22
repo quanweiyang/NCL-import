@@ -15,10 +15,41 @@
 
 ; Please set NCL_DEF_SCRIPTS_DIR to the directory that contains this program
 ; so that it will be loaded automatically every time ncl is run.
-DEF_SCRIPTS_DIRS  = (/"$NCL_DEF_SCRIPTS_DIR/../scripts/", \
-                      "$NCARG_ROOT/lib/ncarg/nclscripts/csm/", \
-                      "$NCARG_ROOT/lib/ncarg/nclscripts/contrib/", \
-                      "$NCARG_ROOT/lib/ncarg/nclscripts/wrf/"/)
+
+; Code starts here
+;_____________________________________________________________________________
+; Function: set_def_scripts_dirs
+; Doc: set NCL_USER_SCRIPT_DIRS variable with standard ncl library directories.
+;     Respect if environmental variable is set already.
+;_____________________________________________________________________________
+undef("set_def_scripts_dirs")
+function set_def_scripts_dirs()
+local std_libraries, env, env_len, NCL_USER_SCRIPT_DIRS
+
+begin
+  std_libraries = (/"$NCARG_ROOT/lib/ncarg/nclscripts/csm/", \
+                    "$NCARG_ROOT/lib/ncarg/nclscripts/contrib/", \
+                    "$NCARG_ROOT/lib/ncarg/nclscripts/wrf/"/)
+
+  env = getenv("NCL_USER_SCRIPT_DIRS")
+
+  if ( .not. ismissing(env) ) then
+    env_len = str_fields_count(env,":")
+    NCL_USER_SCRIPT_DIRS = new(env_len + 3,string)
+    do it = 1, env_len, 1
+      NCL_USER_SCRIPT_DIRS(it - 1) = str_get_field(env,it,":")
+    end do
+
+    do it = env_len, dimsizes(NCL_USER_SCRIPT_DIRS) - 1, 1
+      NCL_USER_SCRIPT_DIRS(it) = std_libraries(it - env_len)
+    end do
+  return(NCL_USER_SCRIPT_DIRS)
+  else
+    return(std_libraries)
+  end if
+end
+
+NCL_USER_SCRIPT_DIRS  = set_def_scripts_dirs()
 IMPORTED_SCRIPTS = (/"ncl_import"/)
 
 ; push an script to IMPORTED_SCRIPTS
@@ -65,12 +96,12 @@ local i, f
 begin
   if(script.eq."?".or.script.eq."") then
     print("Avalable scripts:")
-    do i = 0, dimsizes(DEF_SCRIPTS_DIRS) - 1
-      print(str_join(systemfunc("cd " + DEF_SCRIPTS_DIRS(i) + \
+    do i = 0, dimsizes(NCL_USER_SCRIPT_DIRS) - 1
+      print(str_join(systemfunc("cd " + NCL_USER_SCRIPT_DIRS(i) + \
             "; ls *.ncl|sed 's/\.ncl$//'"), ", "))
     end do
     else if(.not.any(IMPORTED_SCRIPTS .eq. script)) then
-      f = search_file(DEF_SCRIPTS_DIRS, script + ".ncl")
+      f = search_file(NCL_USER_SCRIPT_DIRS, script + ".ncl")
       if(f) then
         ;print("loading script "+f@path)
         loadscript(f@path)
