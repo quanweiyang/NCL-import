@@ -80,7 +80,7 @@ begin
   found = False
   do i = 0, dimsizes(dirs) - 1
     path = dirs(i) + fn
-    if (isfilepresent(path)) then
+    if (fileexists(path)) then
       found = True
       found@path = path
       break
